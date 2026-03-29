@@ -1,0 +1,17 @@
+version: v2
+
+modules:
+  - path: .
+
+deps:
+  - buf.build/servora/servora
+
+lint:
+  use:
+    - STANDARD
+  except:
+    - PACKAGE_VERSION_SUFFIX
+
+breaking:
+  use:
+    - FILE

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package conf;
+
+import "servora/conf/v1/conf.proto";
+
+option go_package = "github.com/Servora-Kit/servora-transport/server/tcp/gen/conf;tcpconf";
+
+message Server {
+  servora.conf.v1.Server.Listen listen = 1;
+  servora.conf.v1.Server.Registry registry = 2;
+  servora.conf.v1.TLSConfig tls = 3;
+}

@@ -1,0 +1,14 @@
+version: v2
+
+clean: true
+
+managed:
+  enabled: true
+  disable:
+    - file_option: go_package
+      path: conf/conf.proto
+
+plugins:
+  - local: protoc-gen-go
+    out: gen
+    opt: paths=source_relative
