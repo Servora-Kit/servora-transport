@@ -178,17 +178,17 @@ func (s *Server) ensureListenerLocked() error {
 		regHost = cfg.GetRegistry().GetHost()
 	}
 
-	ep, err := endpoint.ResolveRegistryEndpoint(Type, bindAddr, regEndpoint, regHost, secure)
+	scheme := Type
+	if secure {
+		scheme = "tcps"
+	}
+	ep, err := endpoint.ResolveRegistryEndpoint(scheme, bindAddr, regEndpoint, regHost, nil)
 	if err != nil {
 		_ = lis.Close()
 		s.lis = nil
 		return fmt.Errorf("resolve tcp registry endpoint: %w", err)
 	}
 	if ep == nil {
-		scheme := Type
-		if secure {
-			scheme = "tcps"
-		}
 		ep = &url.URL{Scheme: scheme, Host: bindAddr}
 	}
 	s.ep = ep
