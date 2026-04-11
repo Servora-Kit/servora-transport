@@ -6,17 +6,18 @@ import (
 	"fmt"
 	"net"
 	"net/url"
+	"strings"
 	"sync"
 	"time"
 
 	tcpconf "github.com/Servora-Kit/servora-transport/server/tcp/gen/conf"
 	"github.com/Servora-Kit/servora/transport/shared/endpoint"
-	"github.com/go-kratos/kratos/v2/log"
+	sharedlifecycle "github.com/Servora-Kit/servora/transport/shared/lifecycle"
 )
 
 var errServerNotStarted = errors.New("tcp server not started")
 
-// Server implements runtime.Server for TCP protocol.
+// Server implements kratos transport contracts for TCP protocol.
 type Server struct {
 	mu      sync.Mutex
 	opts    serverOptions
@@ -114,27 +115,20 @@ func (s *Server) Endpoint() (*url.URL, error) {
 func (s *Server) acceptLoop(ctx context.Context) {
 	defer s.wg.Done()
 
-	for {
+	sharedlifecycle.AcceptLoop(sharedlifecycle.AcceptLoopConfig{
+		Logger:     s.opts.logger,
+		RetryDelay: 50 * time.Millisecond,
+	}, func() error {
 		s.mu.Lock()
 		lis := s.lis
 		s.mu.Unlock()
 		if lis == nil {
-			return
+			return net.ErrClosed
 		}
 
 		conn, err := lis.Accept()
 		if err != nil {
-			if errors.Is(err, net.ErrClosed) {
-				return
-			}
-			if ne, ok := err.(net.Error); ok && ne.Temporary() {
-				time.Sleep(50 * time.Millisecond)
-				continue
-			}
-			if s.opts.logger != nil {
-				_ = s.opts.logger.Log(log.LevelError, "msg", "tcp accept failed", "err", err)
-			}
-			return
+			return err
 		}
 
 		h := s.opts.handler
@@ -143,7 +137,8 @@ func (s *Server) acceptLoop(ctx context.Context) {
 			defer s.wg.Done()
 			h(ctx, c)
 		}(conn)
-	}
+		return nil
+	})
 }
 
 func (s *Server) ensureListenerLocked() error {
@@ -155,10 +150,10 @@ func (s *Server) ensureListenerLocked() error {
 	addr := ":0"
 	cfg := s.opts.config
 	if cfg != nil && cfg.GetListen() != nil {
-		if v := cfg.GetListen().GetNetwork(); v != "" {
+		if v := strings.TrimSpace(cfg.GetListen().GetNetwork()); v != "" {
 			network = v
 		}
-		if v := cfg.GetListen().GetAddr(); v != "" {
+		if v := strings.TrimSpace(cfg.GetListen().GetAddr()); v != "" {
 			addr = v
 		}
 	}
@@ -182,7 +177,12 @@ func (s *Server) ensureListenerLocked() error {
 	if secure {
 		scheme = "tcps"
 	}
-	ep, err := endpoint.ResolveRegistryEndpoint(scheme, bindAddr, regEndpoint, regHost, nil)
+	ep, err := endpoint.ResolveRegistryEndpoint(endpoint.RegistryEndpointInput{
+		Scheme:   scheme,
+		BindAddr: bindAddr,
+		Endpoint: regEndpoint,
+		Host:     regHost,
+	})
 	if err != nil {
 		_ = lis.Close()
 		s.lis = nil

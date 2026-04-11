@@ -8,6 +8,8 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 )
 
+const Type = "tcp"
+
 // ConnectionHandler handles accepted TCP connections.
 type ConnectionHandler func(ctx context.Context, conn net.Conn)
 

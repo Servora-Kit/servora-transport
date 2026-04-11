@@ -7,6 +7,7 @@ import (
 
 	tcpconf "github.com/Servora-Kit/servora-transport/server/tcp/gen/conf"
 	confv1 "github.com/Servora-Kit/servora/api/gen/go/servora/conf/v1"
+	"github.com/Servora-Kit/servora/transport/transporttest"
 )
 
 func TestServerEndpointAndLifecycle(t *testing.T) {
@@ -48,4 +49,11 @@ func TestServerRespectsExplicitRegistryEndpoint(t *testing.T) {
 	if got := ep.String(); got != "tcp://127.0.0.1:9000" {
 		t.Fatalf("endpoint = %s, want %s", got, "tcp://127.0.0.1:9000")
 	}
+}
+
+func TestServer_RoundTripContract(t *testing.T) {
+	srv := NewServer(
+		WithConfig(&tcpconf.Server{Listen: &confv1.Server_Listen{Addr: ":0"}}),
+	)
+	transporttest.RoundTrip(t, srv)
 }
