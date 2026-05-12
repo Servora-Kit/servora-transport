@@ -11,8 +11,8 @@ import (
 	"time"
 
 	tcpconf "github.com/Servora-Kit/servora-transport/server/tcp/gen/conf"
-	"github.com/Servora-Kit/servora/transport/shared/endpoint"
-	sharedlifecycle "github.com/Servora-Kit/servora/transport/shared/lifecycle"
+	"github.com/Servora-Kit/servora/transport/server/accept"
+	"github.com/Servora-Kit/servora/transport/server/endpoint"
 )
 
 var errServerNotStarted = errors.New("tcp server not started")
@@ -115,7 +115,7 @@ func (s *Server) Endpoint() (*url.URL, error) {
 func (s *Server) acceptLoop(ctx context.Context) {
 	defer s.wg.Done()
 
-	sharedlifecycle.AcceptLoop(sharedlifecycle.AcceptLoopConfig{
+	accept.Loop(accept.LoopConfig{
 		Logger:     s.opts.logger,
 		RetryDelay: 50 * time.Millisecond,
 	}, func() error {
@@ -177,7 +177,7 @@ func (s *Server) ensureListenerLocked() error {
 	if secure {
 		scheme = "tcps"
 	}
-	ep, err := endpoint.ResolveRegistryEndpoint(endpoint.RegistryEndpointInput{
+	ep, err := endpoint.ResolveRegistry(endpoint.RegistryInput{
 		Scheme:   scheme,
 		BindAddr: bindAddr,
 		Endpoint: regEndpoint,
