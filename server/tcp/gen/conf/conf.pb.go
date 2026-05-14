@@ -7,9 +7,9 @@
 package tcpconf
 
 import (
-	v1 "github.com/Servora-Kit/servora/api/gen/go/servora/conf/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	durationpb "google.golang.org/protobuf/types/known/durationpb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -22,11 +22,17 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// Server 是 TCP transport 的独立配置 message。
+// 历史上这里曾通过 import "servora/core/v1/bootstrap.proto" 复用主仓的
+// Server.Listen / Server.Registry / TLSConfig 三个嵌套类型，但跨 buf module
+// 的 message 引用需要主仓 BSR 推送同步的 label——本仓与主仓 release 频率
+// 不一致时同步成本高。三个 message 字段都很轻量，直接内联定义换取本仓 gen
+// 自洽。
 type Server struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Listen        *v1.Server_Listen      `protobuf:"bytes,1,opt,name=listen,proto3" json:"listen,omitempty"`
-	Registry      *v1.Server_Registry    `protobuf:"bytes,2,opt,name=registry,proto3" json:"registry,omitempty"`
-	Tls           *v1.TLSConfig          `protobuf:"bytes,3,opt,name=tls,proto3" json:"tls,omitempty"`
+	Listen        *Listen                `protobuf:"bytes,1,opt,name=listen,proto3" json:"listen,omitempty"`
+	Registry      *Registry              `protobuf:"bytes,2,opt,name=registry,proto3" json:"registry,omitempty"`
+	Tls           *TLSConfig             `protobuf:"bytes,3,opt,name=tls,proto3" json:"tls,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -61,36 +67,231 @@ func (*Server) Descriptor() ([]byte, []int) {
 	return file_conf_conf_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Server) GetListen() *v1.Server_Listen {
+func (x *Server) GetListen() *Listen {
 	if x != nil {
 		return x.Listen
 	}
 	return nil
 }
 
-func (x *Server) GetRegistry() *v1.Server_Registry {
+func (x *Server) GetRegistry() *Registry {
 	if x != nil {
 		return x.Registry
 	}
 	return nil
 }
 
-func (x *Server) GetTls() *v1.TLSConfig {
+func (x *Server) GetTls() *TLSConfig {
 	if x != nil {
 		return x.Tls
 	}
 	return nil
 }
 
+// Listen 监听配置（对齐 servora.core.v1.Server.Listen 字段语义）。
+type Listen struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Network       string                 `protobuf:"bytes,1,opt,name=network,proto3" json:"network,omitempty"`
+	Addr          string                 `protobuf:"bytes,2,opt,name=addr,proto3" json:"addr,omitempty"`
+	Timeout       *durationpb.Duration   `protobuf:"bytes,3,opt,name=timeout,proto3" json:"timeout,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Listen) Reset() {
+	*x = Listen{}
+	mi := &file_conf_conf_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Listen) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Listen) ProtoMessage() {}
+
+func (x *Listen) ProtoReflect() protoreflect.Message {
+	mi := &file_conf_conf_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Listen.ProtoReflect.Descriptor instead.
+func (*Listen) Descriptor() ([]byte, []int) {
+	return file_conf_conf_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Listen) GetNetwork() string {
+	if x != nil {
+		return x.Network
+	}
+	return ""
+}
+
+func (x *Listen) GetAddr() string {
+	if x != nil {
+		return x.Addr
+	}
+	return ""
+}
+
+func (x *Listen) GetTimeout() *durationpb.Duration {
+	if x != nil {
+		return x.Timeout
+	}
+	return nil
+}
+
+// Registry 服务注册端点覆盖（对齐 servora.core.v1.Server.Registry）。
+type Registry struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Endpoint      string                 `protobuf:"bytes,1,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
+	Host          string                 `protobuf:"bytes,2,opt,name=host,proto3" json:"host,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Registry) Reset() {
+	*x = Registry{}
+	mi := &file_conf_conf_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Registry) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Registry) ProtoMessage() {}
+
+func (x *Registry) ProtoReflect() protoreflect.Message {
+	mi := &file_conf_conf_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Registry.ProtoReflect.Descriptor instead.
+func (*Registry) Descriptor() ([]byte, []int) {
+	return file_conf_conf_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Registry) GetEndpoint() string {
+	if x != nil {
+		return x.Endpoint
+	}
+	return ""
+}
+
+func (x *Registry) GetHost() string {
+	if x != nil {
+		return x.Host
+	}
+	return ""
+}
+
+// TLSConfig（对齐 servora.core.v1.TLSConfig）。
+type TLSConfig struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Enable        bool                   `protobuf:"varint,1,opt,name=enable,proto3" json:"enable,omitempty"`
+	CertPath      string                 `protobuf:"bytes,2,opt,name=cert_path,json=certPath,proto3" json:"cert_path,omitempty"`
+	KeyPath       string                 `protobuf:"bytes,3,opt,name=key_path,json=keyPath,proto3" json:"key_path,omitempty"`
+	CaPath        string                 `protobuf:"bytes,4,opt,name=ca_path,json=caPath,proto3" json:"ca_path,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TLSConfig) Reset() {
+	*x = TLSConfig{}
+	mi := &file_conf_conf_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TLSConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TLSConfig) ProtoMessage() {}
+
+func (x *TLSConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_conf_conf_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TLSConfig.ProtoReflect.Descriptor instead.
+func (*TLSConfig) Descriptor() ([]byte, []int) {
+	return file_conf_conf_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *TLSConfig) GetEnable() bool {
+	if x != nil {
+		return x.Enable
+	}
+	return false
+}
+
+func (x *TLSConfig) GetCertPath() string {
+	if x != nil {
+		return x.CertPath
+	}
+	return ""
+}
+
+func (x *TLSConfig) GetKeyPath() string {
+	if x != nil {
+		return x.KeyPath
+	}
+	return ""
+}
+
+func (x *TLSConfig) GetCaPath() string {
+	if x != nil {
+		return x.CaPath
+	}
+	return ""
+}
+
 var File_conf_conf_proto protoreflect.FileDescriptor
 
 const file_conf_conf_proto_rawDesc = "" +
 	"\n" +
-	"\x0fconf/conf.proto\x12\x04conf\x1a\x1aservora/conf/v1/conf.proto\"\xac\x01\n" +
-	"\x06Server\x126\n" +
-	"\x06listen\x18\x01 \x01(\v2\x1e.servora.conf.v1.Server.ListenR\x06listen\x12<\n" +
-	"\bregistry\x18\x02 \x01(\v2 .servora.conf.v1.Server.RegistryR\bregistry\x12,\n" +
-	"\x03tls\x18\x03 \x01(\v2\x1a.servora.conf.v1.TLSConfigR\x03tlsB\x8b\x01\n" +
+	"\x0fconf/conf.proto\x12\x04conf\x1a\x1egoogle/protobuf/duration.proto\"}\n" +
+	"\x06Server\x12$\n" +
+	"\x06listen\x18\x01 \x01(\v2\f.conf.ListenR\x06listen\x12*\n" +
+	"\bregistry\x18\x02 \x01(\v2\x0e.conf.RegistryR\bregistry\x12!\n" +
+	"\x03tls\x18\x03 \x01(\v2\x0f.conf.TLSConfigR\x03tls\"k\n" +
+	"\x06Listen\x12\x18\n" +
+	"\anetwork\x18\x01 \x01(\tR\anetwork\x12\x12\n" +
+	"\x04addr\x18\x02 \x01(\tR\x04addr\x123\n" +
+	"\atimeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\atimeout\":\n" +
+	"\bRegistry\x12\x1a\n" +
+	"\bendpoint\x18\x01 \x01(\tR\bendpoint\x12\x12\n" +
+	"\x04host\x18\x02 \x01(\tR\x04host\"t\n" +
+	"\tTLSConfig\x12\x16\n" +
+	"\x06enable\x18\x01 \x01(\bR\x06enable\x12\x1b\n" +
+	"\tcert_path\x18\x02 \x01(\tR\bcertPath\x12\x19\n" +
+	"\bkey_path\x18\x03 \x01(\tR\akeyPath\x12\x17\n" +
+	"\aca_path\x18\x04 \x01(\tR\x06caPathB\x8b\x01\n" +
 	"\bcom.confB\tConfProtoP\x01ZDgithub.com/Servora-Kit/servora-transport/server/tcp/gen/conf;tcpconf\xa2\x02\x03CXX\xaa\x02\x04Conf\xca\x02\x04Conf\xe2\x02\x10Conf\\GPBMetadata\xea\x02\x04Confb\x06proto3"
 
 var (
@@ -105,22 +306,24 @@ func file_conf_conf_proto_rawDescGZIP() []byte {
 	return file_conf_conf_proto_rawDescData
 }
 
-var file_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_conf_conf_proto_goTypes = []any{
-	(*Server)(nil),             // 0: conf.Server
-	(*v1.Server_Listen)(nil),   // 1: servora.conf.v1.Server.Listen
-	(*v1.Server_Registry)(nil), // 2: servora.conf.v1.Server.Registry
-	(*v1.TLSConfig)(nil),       // 3: servora.conf.v1.TLSConfig
+	(*Server)(nil),              // 0: conf.Server
+	(*Listen)(nil),              // 1: conf.Listen
+	(*Registry)(nil),            // 2: conf.Registry
+	(*TLSConfig)(nil),           // 3: conf.TLSConfig
+	(*durationpb.Duration)(nil), // 4: google.protobuf.Duration
 }
 var file_conf_conf_proto_depIdxs = []int32{
-	1, // 0: conf.Server.listen:type_name -> servora.conf.v1.Server.Listen
-	2, // 1: conf.Server.registry:type_name -> servora.conf.v1.Server.Registry
-	3, // 2: conf.Server.tls:type_name -> servora.conf.v1.TLSConfig
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	1, // 0: conf.Server.listen:type_name -> conf.Listen
+	2, // 1: conf.Server.registry:type_name -> conf.Registry
+	3, // 2: conf.Server.tls:type_name -> conf.TLSConfig
+	4, // 3: conf.Listen.timeout:type_name -> google.protobuf.Duration
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_conf_conf_proto_init() }
@@ -134,7 +337,7 @@ func file_conf_conf_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_conf_conf_proto_rawDesc), len(file_conf_conf_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

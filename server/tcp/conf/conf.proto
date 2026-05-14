@@ -2,12 +2,39 @@ syntax = "proto3";
 
 package conf;
 
-import "servora/conf/v1/conf.proto";
+import "google/protobuf/duration.proto";
 
 option go_package = "github.com/Servora-Kit/servora-transport/server/tcp/gen/conf;tcpconf";
 
+// Server 是 TCP transport 的独立配置 message。
+// 历史上这里曾通过 import "servora/core/v1/bootstrap.proto" 复用主仓的
+// Server.Listen / Server.Registry / TLSConfig 三个嵌套类型，但跨 buf module
+// 的 message 引用需要主仓 BSR 推送同步的 label——本仓与主仓 release 频率
+// 不一致时同步成本高。三个 message 字段都很轻量，直接内联定义换取本仓 gen
+// 自洽。
 message Server {
-  servora.conf.v1.Server.Listen listen = 1;
-  servora.conf.v1.Server.Registry registry = 2;
-  servora.conf.v1.TLSConfig tls = 3;
+  Listen listen = 1;
+  Registry registry = 2;
+  TLSConfig tls = 3;
+}
+
+// Listen 监听配置（对齐 servora.core.v1.Server.Listen 字段语义）。
+message Listen {
+  string network = 1;
+  string addr = 2;
+  google.protobuf.Duration timeout = 3;
+}
+
+// Registry 服务注册端点覆盖（对齐 servora.core.v1.Server.Registry）。
+message Registry {
+  string endpoint = 1;
+  string host = 2;
+}
+
+// TLSConfig（对齐 servora.core.v1.TLSConfig）。
+message TLSConfig {
+  bool enable = 1;
+  string cert_path = 2;
+  string key_path = 3;
+  string ca_path = 4;
 }

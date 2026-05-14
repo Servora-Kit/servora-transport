@@ -1,5 +1,3 @@
-github.com/Servora-Kit/servora v0.2.2 h1:g5bW3gBaOrc0ptMzKdhhw+kvgVPsCMxeEPyHKhjNZ/o=
-github.com/Servora-Kit/servora v0.2.2/go.mod h1:O+XZC8bcsdF9tI07xLAGbaDc68tvq9N0JhCoJ5pK3sc=
 github.com/Servora-Kit/servora/api/gen v0.2.1-0.20260327154714-44d1a7d6b725 h1:aASs1++/v+sH7P0OaReNfAGl9vV9R95LluZ0dlE6yko=
 github.com/Servora-Kit/servora/api/gen v0.2.1-0.20260327154714-44d1a7d6b725/go.mod h1:N3N3a4jc1ET6Eb/1dtqvaZhnmo3yuRA2WHM0xL4v5Uw=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
