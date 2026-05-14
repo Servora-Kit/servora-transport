@@ -6,12 +6,11 @@ import (
 	"time"
 
 	tcpconf "github.com/Servora-Kit/servora-transport/server/tcp/gen/conf"
-	confv1 "github.com/Servora-Kit/servora/api/gen/go/servora/conf/v1"
 )
 
 func TestServerEndpointAndLifecycle(t *testing.T) {
 	srv := NewServer(
-		WithConfig(&tcpconf.Server{Listen: &confv1.Server_Listen{Addr: ":0"}}),
+		WithConfig(&tcpconf.Server{Listen: &tcpconf.Listen{Addr: ":0"}}),
 	)
 
 	ep, err := srv.Endpoint()
@@ -36,8 +35,8 @@ func TestServerEndpointAndLifecycle(t *testing.T) {
 func TestServerRespectsExplicitRegistryEndpoint(t *testing.T) {
 	srv := NewServer(
 		WithConfig(&tcpconf.Server{
-			Listen:   &confv1.Server_Listen{Addr: ":0"},
-			Registry: &confv1.Server_Registry{Endpoint: "tcp://127.0.0.1:9000"},
+			Listen:   &tcpconf.Listen{Addr: ":0"},
+			Registry: &tcpconf.Registry{Endpoint: "tcp://127.0.0.1:9000"},
 		}),
 	)
 
@@ -49,4 +48,3 @@ func TestServerRespectsExplicitRegistryEndpoint(t *testing.T) {
 		t.Fatalf("endpoint = %s, want %s", got, "tcp://127.0.0.1:9000")
 	}
 }
-
