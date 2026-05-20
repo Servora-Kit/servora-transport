@@ -2,10 +2,10 @@ package tcp
 
 import (
 	"context"
+	"log/slog"
 	"net"
 
 	tcpconf "github.com/Servora-Kit/servora-transport/server/tcp/gen/conf"
-	"github.com/go-kratos/kratos/v2/log"
 )
 
 const Type = "tcp"
@@ -17,7 +17,7 @@ type ServerOption func(*serverOptions)
 
 type serverOptions struct {
 	config  *tcpconf.Server
-	logger  log.Logger
+	logger  *slog.Logger
 	handler ConnectionHandler
 }
 
@@ -27,7 +27,7 @@ func WithConfig(c *tcpconf.Server) ServerOption {
 	}
 }
 
-func WithLogger(l log.Logger) ServerOption {
+func WithLogger(l *slog.Logger) ServerOption {
 	return func(o *serverOptions) {
 		o.logger = l
 	}
