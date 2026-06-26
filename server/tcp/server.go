@@ -13,9 +13,13 @@ import (
 	tcpconf "github.com/Servora-Kit/servora-transport/server/tcp/gen/conf"
 	"github.com/Servora-Kit/servora/transport/server/accept"
 	"github.com/Servora-Kit/servora/transport/server/endpoint"
+	"github.com/go-kratos/kratos/v3/transport"
 )
 
 var errServerNotStarted = errors.New("tcp server not started")
+
+var _ transport.Server = (*Server)(nil)
+var _ transport.Endpointer = (*Server)(nil)
 
 // Server implements kratos transport contracts for TCP protocol.
 type Server struct {
