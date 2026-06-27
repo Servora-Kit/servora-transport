@@ -1,8 +1,8 @@
-github.com/Servora-Kit/servora v0.7.6 h1:Okz4atFEQmM1FeqLQ7D5fhkvsCxinplZafhcCVXmZh4=
-github.com/Servora-Kit/servora v0.7.6/go.mod h1:A0Kuz/VCLWa4JJDla3EfQt9mvzrYBAPbdewcoRBFOl0=
+github.com/Servora-Kit/servora v0.8.0 h1:80S6TS/xBsGqpABadq0IoRYHf/g7OQoT9tk11qwawkM=
+github.com/Servora-Kit/servora v0.8.0/go.mod h1:/R8G4QoGocagNyo1o50uuvM9Mgo4Zhdci8irGwWXpcU=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
-github.com/go-kratos/kratos/v3 v3.0.0-20260621094049-2726761cdd77 h1:LEUBqzmd6eYLivPO2GOFsahx7bbUGfL4QYKHEOYBnBI=
-github.com/go-kratos/kratos/v3 v3.0.0-20260621094049-2726761cdd77/go.mod h1:8l+0M5UPlm/5hWLvS+wzxHRVRv6sHMG6Lgb4+rw1KIs=
+github.com/go-kratos/kratos/v3 v3.0.0 h1:dCXqKoeo2Bo9jgC72YfuwJ3g7bPCkHeVeNGyZQ51bLE=
+github.com/go-kratos/kratos/v3 v3.0.0/go.mod h1:8l+0M5UPlm/5hWLvS+wzxHRVRv6sHMG6Lgb4+rw1KIs=
 github.com/go-playground/assert/v2 v2.2.0 h1:JvknZsQTYeFEAhQwI4qEt9cyV5ONwRHC+lYKSsYSR8s=
 github.com/go-playground/assert/v2 v2.2.0/go.mod h1:VDjEfimB/XKnb+ZQfWdccd7VUvScMdVu0Titje2rxJ4=
 github.com/go-playground/form/v4 v4.3.0 h1:OVttojbQv2WNCs4P+VnjPtrt/+30Ipw4890W3OaFlvk=
