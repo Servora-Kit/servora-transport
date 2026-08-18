@@ -1,5 +1,5 @@
-github.com/Servora-Kit/servora v0.8.0 h1:80S6TS/xBsGqpABadq0IoRYHf/g7OQoT9tk11qwawkM=
-github.com/Servora-Kit/servora v0.8.0/go.mod h1:/R8G4QoGocagNyo1o50uuvM9Mgo4Zhdci8irGwWXpcU=
+github.com/Servora-Kit/servora v0.9.0 h1:ZH9GWMj3WD7Se4xJ3AHPLMBRcc6M8zncBxJctr4SGds=
+github.com/Servora-Kit/servora v0.9.0/go.mod h1:eFU2h6k9y1f3qJNSxR/f1ZDv9D7VHbqGMqb4eWp49IE=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/go-kratos/kratos/v3 v3.0.0 h1:dCXqKoeo2Bo9jgC72YfuwJ3g7bPCkHeVeNGyZQ51bLE=
 github.com/go-kratos/kratos/v3 v3.0.0/go.mod h1:8l+0M5UPlm/5hWLvS+wzxHRVRv6sHMG6Lgb4+rw1KIs=
