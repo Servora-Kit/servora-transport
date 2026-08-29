@@ -1,6 +1,6 @@
 module github.com/Servora-Kit/servora-transport/server/tcp
 
-go 1.26.1
+go 1.27.0
 
 require (
 	github.com/Servora-Kit/servora v0.9.0
